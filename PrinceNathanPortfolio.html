@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prince Nathan | Frontend Dev & UI Designer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #e8282a;
+            --bg: #080a0e;
+            --bg-card: #111520;
+            --text: #f0f2f5;
+            --text-muted: #7a8394;
+            --nav-h: 80px;
+            --border: rgba(255,255,255,0.08);
+        }
+
+        /* Fixed Navigation Offset Link Setup */
+        html { 
+            scroll-behavior: smooth; 
+            scroll-padding-top: var(--nav-h); 
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'DM Sans', sans-serif; 
+            line-height: 1.6;
+        }
+
+        /* FIXED NAVBAR */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            background: rgba(8, 10, 14, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 9999;
+        }
+
+        .logo { 
+            font-family: 'Syne', sans-serif; 
+            font-weight: 800; 
+            font-size: 1.5rem; 
+            text-decoration: none; 
+            color: var(--text);
+        }
+        .logo span { color: var(--red); }
+
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--red); }
+
+        .contact-btn {
+            background: var(--red);
+            color: white !important;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+        }
+
+        /* SECTIONS */
+        section {
+            min-height: 100vh;
+            padding: 40px 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Hero Configuration (Static Profile Area) */
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-text { text-align: left; }
+        .hero-text h1 { 
+            font-family: 'Syne', sans-serif; 
+            font-size: clamp(2.5rem, 6vw, 4.5rem); 
+            line-height: 1.0;
+            margin-bottom: 1rem;
+        }
+        .hero-text h1 span { color: var(--red); }
+
+        .photo-column {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-wrapper { 
+            width: 300px; 
+            height: 300px; 
+            position: relative;
+            border-radius: 50%; 
+            border: 2px solid rgba(232, 40, 42, 0.3); 
+            padding: 12px;
+        }
+
+        .photo-circle { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%; 
+            background: var(--bg-card); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .photo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* PROJECT VIEWER GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--red); transform: translateY(-5px); }
+        
+        .card h3 { font-family: 'Syne', sans-serif; margin-bottom: 0.5rem; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+
+        .btn-view {
+            background: transparent;
+            border: 1px solid var(--red);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-view:hover {
+            background: var(--red);
+        }
+
+        /* OVERLAY PANEL FOR CODE RUNNER */
+        #viewer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 5, 8, 0.98);
+            z-index: 10000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .code-container {
+            max-width: 850px;
+            margin: 4rem auto;
+            background: #011627;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .code-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        .code-header-bar h3 { font-family: 'Syne', sans-serif; color: var(--text); }
+        pre { color: #80cbc4; white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 0.95rem; }
+        
+        .close-btn { 
+            color: white; 
+            cursor: pointer; 
+            background: var(--red);
+            padding: 6px 16px; 
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        form input, form textarea {
+            width: 100%; padding: 1rem; margin-bottom: 1rem;
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: white; border-radius: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .hero-layout { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+            .hero-text { text-align: center; }
+            .photo-column { order: -1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#home" class="logo">PRINCE<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact" class="contact-btn">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home">
+        <div class="hero-layout">
+            <div class="hero-text">
+                <h1>PRINCE<br><span>NATHAN</span></h1>
+                <p style="margin-top: 1rem; font-size: 1.2rem; color: var(--text-muted);">Frontend Developer & UI/UX Designer</p>
+                <p style="margin-top: 0.5rem; max-width: 500px; color: var(--text-muted);">Building clean, responsive, and maintainable applications with modern frontend architectures.</p>
+            </div>
+            <div class="photo-column">
+                <div class="photo-wrapper">
+                    <div class="photo-circle">
+                        <img src="bla.jpg" alt="Prince Nathan Profile">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2 style="font-family: 'Syne'; font-size: 2.8rem; margin-bottom: 1rem;">About Me</h2>
+        <p style="max-width: 650px; color: var(--text-muted); font-size: 1.1rem;">
+            I construct interfaces prioritizing performance and clear structural architecture. Deeply invested in working within components through environments powered by Vue 3, Tailwind CSS, and Vite modules.
+        </p>
+    </section>
+
+    <section id="projects">
+        <h2 style="font-family: 'Syne'; font-size: 2.8rem;">Featured Repositories</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Sosl3 - Tembera Rwanda</h3>
+                <p>Regional mapping structures, local trail routes, and navigation layouts built for tourism exploration elements.</p>
+                <button class="btn-view" onclick="openCode('tembera')">View Snippet</button>
+            </div>
+            <div class="card">
+                <h3>RWF Currency Engine</h3>
+                <p>A minimalist calculation tool processing currency interactions from standard base USD variables straight to Rwandan Franc targets.</p>
+                <button class="btn-view" onclick="openCode('converter')">View Snippet</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 style="font-family: 'Syne'; font-size: 2.8rem; margin-bottom: 1rem;">Get In Touch</h2>
+        <form style="max-width: 550px; margin-top: 1rem;">
+            <input type="text" placeholder="Name">
+            <input type="email" placeholder="Email Address">
+            <textarea placeholder="Specify project scope or requirements..." rows="6"></textarea>
+            <button type="button" style="background: var(--red); color: white; border: none; padding: 1.1rem 2rem; font-weight: 700; cursor: pointer; width: 100%; border-radius: 6px;">Submit Inquiry</button>
+        </form>
+    </section>
+
+    <div id="viewer">
+        <div class="code-container">
+            <div class="code-header-bar">
+                <h3 id="codeTitle">File Preview</h3>
+                <span class="close-btn" onclick="closeCode()">Close Window</span>
+            </div>
+            <pre id="codeContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        const snippets = {
+            tembera: `<template>\n  <section class="destination-showcase">\n    <div class="region-card" v-for="zone in regions" :key="zone.id">\n      <h2>{{ zone.name }} Province</h2>\n      <p>{{ zone.description }}</p>\n    </div>\n  </section>\n</template>\n\n<script setup>\nimport { ref } from 'vue';\n\nconst regions = ref([\n  { id: 1, name: 'Northern', description: 'Highland forests and mountain tracking ranges.' },\n  { id: 2, name: 'Eastern', description: 'Savanna landscapes and lakeshore views.' }\n]);\n<\/script>`,
+            converter: `// Clean implementation config handling conversion dynamics\nexport function useCurrencyConverter() {\n  const EXCHANGE_RATE = 1280; \n\n  const convertUsdToRwf = (amountInUsd) => {\n    if (isNaN(amountInUsd) || amountInUsd < 0) return "0 RWF";\n    const calculatedValue = amountInUsd * EXCHANGE_RATE;\n    return calculatedValue.toLocaleString('en-US') + " RWF";\n  };\n\n  return { convertUsdToRwf };\n}`
+        };
+
+        function openCode(key) {
+            document.getElementById('codeContent').textContent = snippets[key];
+            document.getElementById('codeTitle').textContent = key.toUpperCase() + " / SOURCE_CODE";
+            document.getElementById('viewer').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCode() {
+            document.getElementById('viewer').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
